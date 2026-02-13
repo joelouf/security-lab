@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 200">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#111318" />
+      <stop offset="100%" stop-color="#1e2023" />
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#33353a" stroke-width="0.3" opacity="0.4" />
+    </pattern>
+  </defs>
+  <rect width="1200" height="200" fill="url(#bg)" />
+  <rect width="1200" height="200" fill="url(#grid)" opacity="0.3" />
+  <rect x="100" y="48" width="3" height="104" fill="#E5720F" opacity="0.8" rx="1" />
+  <text x="144" y="98" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="54" font-weight="300"
+    fill="#f0f1f3" letter-spacing="8">SECURITY LAB</text>
+  <text x="147" y="140" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="300"
+    fill="#6e7177" letter-spacing="1">Engineering from first principles</text>
+</svg>

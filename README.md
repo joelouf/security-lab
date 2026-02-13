@@ -2,9 +2,9 @@
   <img src="./docs/assets/images/security_lab_banner.svg" alt="Security Lab Banner" width="100%">
 </p>
 
-A comprehensive cybersecurity environment built on Proxmox VE to simulate, detect, and respond to real-world security threats. It features VLAN-segmented networks controlled by a virtualized pfSense firewall, a distributed Wazuh SIEM stack, dual-layer network intrusion detection via Suricata and Zeek, and secure remote access through WireGuard and Apache Guacamole.
+<p>A comprehensive cybersecurity environment built on Proxmox VE to simulate, detect, and respond to real-world security threats. It features VLAN-segmented networks controlled by a virtualized pfSense firewall, a distributed Wazuh SIEM stack, dual-layer network intrusion detection via Suricata and Zeek, and secure remote access through WireGuard and Apache Guacamole.</p>
 
-This lab is built to evolve and supports the addition of new capabilities, making it a long-term platform for hands-on security engineering.
+<p>This lab is built to evolve and supports the addition of new capabilities, making it a long-term platform for hands-on security engineering.</p>
 
 <br />
 
@@ -226,7 +226,7 @@ Planned enhancements include:
 ## Contact
 
 ### **Joe Maalouf**
-<address>
+<address style="display: flex; justify-content: flex-start; list-style-type: none;">
   <a href="https://github.com/joelouf" title="GitHub: @joelouf">
     <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" height="32" alt="github.com/joelouf" />
   </a>

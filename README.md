@@ -42,6 +42,8 @@
   </nav>
 </details>
 
+<br />
+
 ## Overview
 
 This project delivers a self-hosted cybersecurity lab that mirrors enterprise network architecture on a single physical server. The primary goals are to:

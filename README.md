@@ -8,7 +8,7 @@
 
 <details open>
   <summary style="overflow: hidden; cursor: pointer;">
-    <h2 style="display: inline; float: right; width: calc(100% - 20px); margin: 0; position: relative; top: -0.085em;" id="table-of-contents">Table of Contents</h2>
+    <h2 style="display: inline; float: right; width: calc(100% - 25px); margin: 0; position: relative; top: -0.085em;" id="table-of-contents">Table of Contents</h2>
   </summary>
 
   <nav style="clear: both; margin-top: 1rem">

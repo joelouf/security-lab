@@ -6,8 +6,6 @@
 
 <p>This lab is built to evolve and supports the addition of new capabilities, making it a long-term platform for hands-on security engineering.</p>
 
-<br />
-
 <details open>
   <summary style="overflow: hidden; cursor: pointer;">
     <h2 style="display: inline; float: right; width: calc(100% - 20px); margin: 0; position: relative; top: -0.085em;" id="table-of-contents">Table of Contents</h2>
@@ -43,8 +41,6 @@
     </ol>
   </nav>
 </details>
-
-<br />
 
 ## Overview
 

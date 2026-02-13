@@ -87,12 +87,12 @@ The lab uses a dual-router topology to isolate its traffic from the household ne
 
 | VLAN | Name | Subnet | Purpose | Internet Access |
 |-|-|-|-|-|
-| — | Production LAN | 192.168.1.0/24 | Infrastructure services (Wazuh, NIDS, WireGuard, Guacamole) | Yes |
+| - | Production LAN | 192.168.1.0/24 | Infrastructure services (Wazuh, NIDS, WireGuard, Guacamole) | Yes |
 | Native | Default | 10.0.0.0/24 | Untagged traffic on vmbr1 | Per pfSense policy |
 | 10 | SEC_OPS | 10.10.10.0/24 | Security operations (Kali Linux) | Yes |
 | 20 | AD_LAB | 10.20.20.0/24 | Active Directory environment (DC, Windows endpoints) | Yes |
 | 30 | SEC_EGRESS | 10.30.30.0/24 | Untrusted hosts with internet access (OWASP Juice Shop) | Yes |
-| 40 | SEC_ISOLATED | 10.40.40.0/24 | Fully isolated untrusted hosts (VulnHub machines) | No — Kali access only |
+| 40 | SEC_ISOLATED | 10.40.40.0/24 | Fully isolated untrusted hosts (VulnHub machines) | No - Kali access only |
 
 This segmentation enforces the principle of least privilege at the network level. Vulnerable and untrusted hosts in VLANs 30 and 40 are restricted from reaching production infrastructure, while the SEC_ISOLATED zone has no internet access at all, limiting blast radius in the event of an uncontrolled exploit.
 
@@ -127,20 +127,20 @@ Traffic flows through the lab as follows:
 
 ### Hypervisor & Virtualization
 
-Proxmox VE manages all lab workloads on a single physical node, providing KVM virtual machines for resource-intensive systems and LXC containers for lightweight services. It was selected over VMware ESXi and Microsoft Hyper-V primarily for licensing stability — Broadcom's acquisition of VMware introduced uncertainty that disqualified ESXi as a long-term foundation, and Hyper-V required a full Windows Server license after Microsoft discontinued the free standalone product. Proxmox offers open-source licensing with no feature gating, native ZFS snapshots, and a dedicated backup product at no additional cost.
+Proxmox VE manages all lab workloads on a single physical node, providing KVM virtual machines for resource-intensive systems and LXC containers for lightweight services. It was selected over VMware ESXi and Microsoft Hyper-V primarily for licensing stability - Broadcom's acquisition of VMware introduced uncertainty that disqualified ESXi as a long-term foundation, and Hyper-V required a full Windows Server license after Microsoft discontinued the free standalone product. Proxmox offers open-source licensing with no feature gating, native ZFS snapshots, and a dedicated backup product at no additional cost.
 
-Two Open vSwitch (OVS) bridges enforce Layer 2 segmentation. OVS was chosen over standard Linux bridges to natively support 802.1Q VLAN trunking, port mirroring (SPAN), and strict Layer 2 isolation — capabilities that would otherwise require supplementary tooling such as physical TAPs or iptables TEE targets.
+Two Open vSwitch (OVS) bridges enforce Layer 2 segmentation. OVS was chosen over standard Linux bridges to natively support 802.1Q VLAN trunking, port mirroring (SPAN), and strict Layer 2 isolation - capabilities that would otherwise require supplementary tooling such as physical TAPs or iptables TEE targets.
 
 | Interface | Type | Ports / Slaves | CIDR | Role |
 |-|-|-|-|-|
-| `enp89s0` | OVS Port | — | — | Physical uplink to vmbr0 |
-| `vmbr0` | OVS Bridge | `enp89s0` `vmbr0_mgmt` | — | Production LAN |
-| `vmbr0_mgmt` | OVS IntPort | — | 192.168.1.16/24 | Management interface (gw: 192.168.1.1) |
-| `vmbr1` | OVS Bridge | `vmbr1_10` `vmbr1_20` `vmbr1_30` `vmbr1_40` | — | Security switch (no physical uplink) |
-| `vmbr1_10` | OVS IntPort | — | — | SEC_OPS (VLAN 10) |
-| `vmbr1_20` | OVS IntPort | — | — | AD_LAB (VLAN 20) |
-| `vmbr1_30` | OVS IntPort | — | — | SEC_EGRESS (VLAN 30) |
-| `vmbr1_40` | OVS IntPort | — | — | SEC_ISOLATED (VLAN 40) |
+| `enp89s0` | OVS Port | - | - | Physical uplink to vmbr0 |
+| `vmbr0` | OVS Bridge | `enp89s0` `vmbr0_mgmt` | - | Production LAN |
+| `vmbr0_mgmt` | OVS IntPort | - | 192.168.1.16/24 | Management interface (gw: 192.168.1.1) |
+| `vmbr1` | OVS Bridge | `vmbr1_10` `vmbr1_20` `vmbr1_30` `vmbr1_40` | - | Security switch (no physical uplink) |
+| `vmbr1_10` | OVS IntPort | - | - | SEC_OPS (VLAN 10) |
+| `vmbr1_20` | OVS IntPort | - | - | AD_LAB (VLAN 20) |
+| `vmbr1_30` | OVS IntPort | - | - | SEC_EGRESS (VLAN 30) |
+| `vmbr1_40` | OVS IntPort | - | - | SEC_ISOLATED (VLAN 40) |
 
 vmbr0 bridges to the physical NIC for LAN and WAN connectivity. vmbr1 has no physical uplink and is reachable only through pfSense's trunk port. SPAN ports on both bridges feed mirrored frames to the NIDS node, providing passive full-packet visibility across all network segments.
 
@@ -148,7 +148,7 @@ Storage is split across two NVMe drives for fault isolation: the 500 GB drive ho
 
 ### Firewall & Network Security
 
-A virtualized **pfSense** firewall serves as the single policy enforcement point for the entire lab. Its WAN interface (vtnet0) sits on vmbr0 with a static address on the production LAN, while its LAN interface (vtnet1) connects to vmbr1 as a VLAN trunk carrying sub-interfaces for each security zone (vtnet1.10 through vtnet1.40). All inter-VLAN routing and access control is enforced here — no traffic crosses between VLANs without traversing pfSense.
+A virtualized **pfSense** firewall serves as the single policy enforcement point for the entire lab. Its WAN interface (vtnet0) sits on vmbr0 with a static address on the production LAN, while its LAN interface (vtnet1) connects to vmbr1 as a VLAN trunk carrying sub-interfaces for each security zone (vtnet1.10 through vtnet1.40). All inter-VLAN routing and access control is enforced here - no traffic crosses between VLANs without traversing pfSense.
 
 Firewall rules implement least-privilege network access per VLAN. SEC_OPS (VLAN 10) is permitted to reach target VLANs 20, 30, and 40 for offensive operations. AD_LAB (VLAN 20) and SEC_EGRESS (VLAN 30) have internet access but cannot reach production infrastructure. SEC_ISOLATED (VLAN 40) has no internet access and no route to any network other than inbound connections from Kali on VLAN 10, constraining blast radius from intentionally exploitable systems. DHCP is served by pfSense on each VLAN sub-interface, with static reservations for infrastructure hosts. Static routes on the personal router direct 10.x.x.x return traffic back to pfSense's WAN IP.
 
@@ -156,44 +156,44 @@ Firewall rules implement least-privilege network access per VLAN. SEC_OPS (VLAN 
 
 The **Wazuh** stack is deployed as a distributed architecture across three dedicated VMs on the production LAN:
 
-- **Wazuh Manager** (192.168.1.19) — Receives agent events, applies rule matching and correlation, and forwards processed data to the Indexer.
-- **Wazuh Indexer** (192.168.1.17) — OpenSearch-based storage and full-text search across alert, archive, and monitoring indices.
-- **Wazuh Dashboards** (192.168.1.18) — Web interface for alert visualization, threat hunting, and agent management. Connects to both the Indexer (queries) and the Manager (API for configuration and active response).
+- **Wazuh Manager** (192.168.1.19) - Receives agent events, applies rule matching and correlation, and forwards processed data to the Indexer.
+- **Wazuh Indexer** (192.168.1.17) - OpenSearch-based storage and full-text search across alert, archive, and monitoring indices.
+- **Wazuh Dashboards** (192.168.1.18) - Web interface for alert visualization, threat hunting, and agent management. Connects to both the Indexer (queries) and the Manager (API for configuration and active response).
 
-The distributed deployment separates ingestion, storage, and presentation concerns, allowing each component to be independently resourced and maintained. Wazuh agents are deployed on monitored endpoints across VLANs 10 and 20 (Kali, DC1, Win10Ent1, Win10Ent2), reporting host-level telemetry — log collection, file integrity monitoring, and security configuration assessment — to the Manager over TCP 1514. Filebeat on the NIDS node ships Suricata and Zeek alerts into the Wazuh pipeline, enabling centralized correlation between network-level detections and endpoint events.
+The distributed deployment separates ingestion, storage, and presentation concerns, allowing each component to be independently resourced and maintained. Wazuh agents are deployed on monitored endpoints across VLANs 10 and 20 (Kali, DC1, Win10Ent1, Win10Ent2), reporting host-level telemetry - log collection, file integrity monitoring, and security configuration assessment - to the Manager over TCP 1514. Filebeat on the NIDS node ships Suricata and Zeek alerts into the Wazuh pipeline, enabling centralized correlation between network-level detections and endpoint events.
 
 ### Network Intrusion Detection (NIDS)
 
 A dedicated **NIDS node** (192.168.1.20) on the production LAN runs both **Suricata** and **Zeek**, providing complementary detection capabilities. Suricata performs signature-based intrusion detection against known threat patterns, while Zeek provides protocol analysis and connection metadata that supports behavioral investigation and threat hunting beyond what signatures alone can identify.
 
-The node receives mirrored traffic from SPAN ports on both vmbr0 and vmbr1, giving it full visibility into production infrastructure and all VLAN-segmented security traffic simultaneously — without inline placement that could introduce latency or become a point of failure. Alerts from both engines are forwarded via Filebeat into the Wazuh SIEM for unified alerting and correlation with endpoint telemetry.
+The node receives mirrored traffic from SPAN ports on both vmbr0 and vmbr1, giving it full visibility into production infrastructure and all VLAN-segmented security traffic simultaneously - without inline placement that could introduce latency or become a point of failure. Alerts from both engines are forwarded via Filebeat into the Wazuh SIEM for unified alerting and correlation with endpoint telemetry.
 
 ### Remote Access
 
 Two independent access paths provide secure lab management:
 
-- **WireGuard** — Runs in a dedicated LXC container (192.168.1.4) on the production LAN. UDP port 51820 is exposed through the home router via Dynamic DNS, enabling encrypted tunnel access from external networks. Once connected, remote clients have network-level access equivalent to being on the production LAN.
+- **WireGuard** - Runs in a dedicated LXC container (192.168.1.4) on the production LAN. UDP port 51820 is exposed through the home router via Dynamic DNS, enabling encrypted tunnel access from external networks. Once connected, remote clients have network-level access equivalent to being on the production LAN.
 
-- **Apache Guacamole** — Runs in a dedicated LXC container (192.168.1.3) on the production LAN, providing clientless browser-based RDP and SSH access to lab VMs. This supplements WireGuard by enabling access from environments where a VPN client cannot be installed or where only browser-based connectivity is available.
+- **Apache Guacamole** - Runs in a dedicated LXC container (192.168.1.3) on the production LAN, providing clientless browser-based RDP and SSH access to lab VMs. This supplements WireGuard by enabling access from environments where a VPN client cannot be installed or where only browser-based connectivity is available.
 
 ### Offensive Security
 
-**Kali Linux** is deployed on VLAN 10 (SEC_OPS) as the primary attack platform. Placing it on a dedicated VLAN separates offensive tooling from target environments, ensuring that attack traffic is generated across VLAN boundaries and is visible to both the pfSense firewall and the NIDS — mirroring the network visibility that a SOC would have in an enterprise environment. pfSense rules permit Kali to reach VLANs 20, 30, and 40 for engagements against Active Directory, web application, and isolated targets respectively.
+**Kali Linux** is deployed on VLAN 10 (SEC_OPS) as the primary attack platform. Placing it on a dedicated VLAN separates offensive tooling from target environments, ensuring that attack traffic is generated across VLAN boundaries and is visible to both the pfSense firewall and the NIDS - mirroring the network visibility that a SOC would have in an enterprise environment. pfSense rules permit Kali to reach VLANs 20, 30, and 40 for engagements against Active Directory, web application, and isolated targets respectively.
 
 ### Active Directory Environment
 
 VLAN 20 (AD_LAB) hosts a Windows Active Directory domain:
 
-- **DC1** — Windows Server 2025 domain controller.
-- **Win11Ent1** and **Win11Ent2** — Windows 11 Enterprise domain-joined workstations.
+- **DC1** - Windows Server 2025 domain controller.
+- **Win11Ent1** and **Win11Ent2** - Windows 11 Enterprise domain-joined workstations.
 
 This environment supports attack scenarios including credential harvesting, lateral movement, Group Policy abuse, and domain enumeration. All three hosts run Wazuh agents, providing endpoint-level visibility into authentication events, process execution, and file integrity changes alongside the network-level detection from the NIDS.
 
 ### Vulnerable Targets
 
-- **OWASP Juice Shop** (VLAN 30 — SEC_EGRESS) — A deliberately vulnerable web application deployed via Docker for testing web application attacks including injection, XSS, and broken authentication. Placed on SEC_EGRESS because it requires internet access for its intended functionality, but is restricted from reaching production infrastructure.
+- **OWASP Juice Shop** (VLAN 30 - SEC_EGRESS) - A deliberately vulnerable web application deployed via Docker for testing web application attacks including injection, XSS, and broken authentication. Placed on SEC_EGRESS because it requires internet access for its intended functionality, but is restricted from reaching production infrastructure.
 
-- **VulnHub Machines** (VLAN 40 — SEC_ISOLATED) — Intentionally exploitable VMs for practicing penetration testing techniques. Placed on SEC_ISOLATED with no internet access and no route to production systems — only Kali on VLAN 10 can reach them, constraining the blast radius of any uncontrolled exploit.
+- **VulnHub Machines** (VLAN 40 - SEC_ISOLATED) - Intentionally exploitable VMs for practicing penetration testing techniques. Placed on SEC_ISOLATED with no internet access and no route to production systems - only Kali on VLAN 10 can reach them, constraining the blast radius of any uncontrolled exploit.
 
 ### Backup & Storage
 
@@ -203,12 +203,12 @@ Proxmox's built-in backup scheduler writes VM and container backups to a **2 TB 
 
 Planned enhancements include:
 
-- [ ] **Network Addressing Cleanup** — Migrate the personal router away from the default 192.168.1.0/24 scheme to a custom and more coherent addressing scheme.
-- [ ] **Ansible Automation** — Automate maintenance tasks for Wazuh components, such as upgrades and configuration management.
-- [ ] **AWS Integration** — Extend the lab into AWS to gain hands-on experience with cloud security monitoring and hybrid environments.
-- [ ] **Malware Analysis Sandbox** — Deploy a dedicated analysis environment on an isolated VLAN for safe dynamic and static malware analysis.
-- [ ] **Detection Engineering Pipeline** — Build a CI/CD workflow for developing, testing, and deploying custom Wazuh rules and Suricata signatures.
-- [ ] **MITRE ATT&CK Coverage Matrix** — Build and maintain a visual map of which ATT&CK techniques the lab can detect, organized by data source.
+- [ ] **Network Addressing Cleanup** - Migrate the personal router away from the default 192.168.1.0/24 scheme to a custom and more coherent addressing scheme.
+- [ ] **Ansible Automation** - Automate maintenance tasks for Wazuh components, such as upgrades and configuration management.
+- [ ] **AWS Integration** - Extend the lab into AWS to gain hands-on experience with cloud security monitoring and hybrid environments.
+- [ ] **Malware Analysis Sandbox** - Deploy a dedicated analysis environment on an isolated VLAN for safe dynamic and static malware analysis.
+- [ ] **Detection Engineering Pipeline** - Build a CI/CD workflow for developing, testing, and deploying custom Wazuh rules and Suricata signatures.
+- [ ] **MITRE ATT&CK Coverage Matrix** - Build and maintain a visual map of which ATT&CK techniques the lab can detect, organized by data source.
 
 ## References
 

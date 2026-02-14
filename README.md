@@ -212,6 +212,19 @@ Planned enhancements include:
 
 - [Proxmox Cybersecurity Lab Project - 0xBEN](https://benheater.com/proxmox-cybersecurity-lab/)
 - [Building Blue Team Home Lab - facyber (Marko Andrejic)](https://facyber.me/posts/blue-team-lab-guide-part-1/)
+- [Free VMware ESXi: Restrictions and Limitations](https://www.nakivo.com/blog/free-vmware-esxi-restrictions-limitations/)
+- [VMware ESXi Free vs. Paid: What You Need to Know](https://www.ituonline.com/blogs/vmware-esxi-free-vs-paid/)
+- [My Proxmox Server Build 2025! Minisforum BD795M with 32 threads, 96 GB memory, 10 gig](https://www.youtube.com/watch?v=qFWQldUqzyk&t=82s)
+- [Minisforum MS-01 Review: Almost Perfect Home Lab Server](https://www.youtube.com/watch?v=T229S9gh2x8)
+- [Building a Home Lab for Offensive Security & Security Research](https://systemoverlord.com/2017/10/24/building-a-home-lab-for-offensive-security-basics.html#hardware-1)
+- [Offensive Security Labs Documentation](https://offensivesecuritylabs.com/kb/)
+- [the ULTIMATE Proxmox Guide - Post-Install, ZFS, GPU Passthrough, and more!](https://www.youtube.com/watch?v=KMNS_JoHFhg&t=196s)
+- [How to Change Primary Proxmox VE IP Address](https://www.servethehome.com/how-to-change-primary-proxmox-ve-ip-address/)
+- [Mismatching pve-ssl.pem certificate after hostname change](https://forum.proxmox.com/threads/mismatching-pve-ssl-pem-certificate-after-hostname-change-correct-process-for-renaming-and-changing-the-ip-address-of-hosts-in-a-cluster.158886/)
+- [Switching Desktop Environments](https://www.kali.org/docs/general-use/switching-desktop-environments/)
+- [Design and Implementation of a Cyber Security Test Bed](https://scholarworks.calstate.edu/downloads/8336h2271)
+
+### Official Documentation
 - [Proxmox VE Documentation](https://pve.proxmox.com/wiki/Main_Page)
 - [pfSense Documentation](https://docs.netgate.com/pfsense/en/latest/)
 - [Wazuh Documentation](https://documentation.wazuh.com/current/)

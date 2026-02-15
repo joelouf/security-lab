@@ -1,3 +1,3 @@
 name: security-lab
 author: Joe Maalouf
-description: A cybersecurity environment built on Proxmox VE to simulate, detect, and respond to real-world security threats.
+description: A cybersecurity environment built on Proxmox to simulate, detect, and respond to real-world security threats.

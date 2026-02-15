@@ -2,7 +2,7 @@
   <img src="./docs/assets/images/security_lab_banner.svg" alt="Security Lab Banner" width="100%">
 </p>
 
-<p>A comprehensive cybersecurity environment built on Proxmox VE to simulate, detect, and respond to real-world security threats. It features VLAN-segmented networks controlled by a virtualized pfSense firewall, a distributed Wazuh SIEM stack, dual-layer network intrusion detection via Suricata and Zeek, and secure remote access through WireGuard and Apache Guacamole.</p>
+<p>A comprehensive cybersecurity environment built on Proxmox to simulate, detect, and respond to real-world security threats. It features VLAN-segmented networks controlled by a virtualized pfSense firewall, a distributed Wazuh SIEM stack, dual-layer network intrusion detection via Suricata and Zeek, and secure remote access through WireGuard and Apache Guacamole.</p>
 
 <p>This lab is built to evolve and supports the addition of new capabilities, making it a long-term platform for hands-on security engineering.</p>
 
